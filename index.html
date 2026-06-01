@@ -89,21 +89,36 @@
 
         <!-- Шапка -->
         <div class="text-center w-full mb-4">
-            <div class="flex items-center justify-center gap-3 mb-2">
-                <h1 class="text-3xl font-black tracking-tight text-gray-100 drop-shadow-md leading-none">
-                    ABBAS AI <br/> <span class="text-2xl text-blue-400">PREDICTOR</span>
+            <!-- Заголовок и подзаголовок -->
+            <div class="flex flex-col items-center justify-center gap-1 mb-2">
+                <h1 class="text-4xl font-black tracking-tight text-gray-100 drop-shadow-md leading-none text-center">
+                    ABBAS AI <br/> <span class="text-3xl text-blue-400">PREDICTOR</span>
                 </h1>
-                <span class="text-5xl drop-shadow-lg">🇮🇶</span>
+                <div class="text-lg font-bold text-gray-400 tracking-wider mt-1">
+                    BASIC <span class="text-yellow-500">(65%)</span>
+                </div>
+            </div>
+
+            <!-- Новая Кнопка-ссылка (Играть только здесь на арабском) -->
+            <div class="mt-6 mb-2">
+                <a href="https://reffpa.com/L?tag=d_5610399m_18217c_&site=5610399&ad=18217&r=registration" target="_blank" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-700 to-blue-500 hover:from-blue-600 hover:to-blue-400 text-white font-bold py-2.5 px-6 rounded-full text-sm transition-all shadow-[0_0_15px_rgba(37,99,235,0.4)] border border-blue-400/30 w-full max-w-[250px] mx-auto">
+                    <span class="tracking-wide">العب هنا فقط</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
             </div>
             
-            <!-- Плашки с технической информацией -->
+            <!-- Плашки с технической информацией (Оставил только MODEL) -->
             <div class="flex justify-center gap-2 mt-4">
-                <div class="bg-gray-800/80 border border-gray-700 px-2 py-1 rounded text-[10px] font-mono text-gray-300">
+                <div class="bg-gray-800/80 border border-gray-700 px-3 py-1.5 rounded text-xs font-mono text-gray-300">
                     MODEL: <span class="text-blue-400">NEURAL-V7</span>
                 </div>
-                <div class="bg-gray-800/80 border border-gray-700 px-2 py-1 rounded text-[10px] font-mono text-gray-300">
-                    ACCURACY: <span class="text-green-400">98.4%</span>
-                </div>
+            </div>
+
+            <!-- VIP Кнопка -->
+            <div class="mt-4 w-full flex justify-center">
+                <button id="vipBtn" class="w-full max-w-[250px] bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-500 hover:to-yellow-300 text-black font-black py-2 px-4 rounded-xl text-sm shadow-[0_0_15px_rgba(234,179,8,0.4)] transition-all uppercase tracking-wider flex items-center justify-center gap-2 animate-pulse">
+                    👑 ABBAS AI VIP 95%
+                </button>
             </div>
         </div>
 
@@ -158,12 +173,35 @@
     </div>
 
     <!-- Кнопка генерации сигнала (Фиксированная внизу экрана) -->
-    <div class="fixed bottom-0 left-0 w-full px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-8 bg-gradient-to-t from-[#0b1120] via-[#0b1120] to-transparent z-50 pointer-events-none">
+    <div class="fixed bottom-0 left-0 w-full px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-8 bg-gradient-to-t from-[#0b1120] via-[#0b1120] to-transparent z-40 pointer-events-none">
         <div class="max-w-sm mx-auto w-full pointer-events-auto">
             <button id="generateBtn" class="w-full bg-green-500 hover:bg-green-400 active:bg-green-600 text-white font-black text-xl py-4 rounded-2xl transition-all btn-pulse uppercase tracking-wider shadow-[0_0_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                 GENERATE SIGNAL
             </button>
+        </div>
+    </div>
+
+    <!-- VIP Modal / Push Notification -->
+    <div id="vipModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <div class="bg-gray-900 border border-yellow-500/30 rounded-2xl p-6 w-full max-w-sm shadow-[0_0_40px_rgba(234,179,8,0.2)] transform translate-y-8 transition-transform duration-300" id="vipModalContent">
+            <div class="flex justify-end mb-2">
+                <button id="closeModalBtn" class="text-gray-400 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2" dir="rtl">خطأ في الحساب!</h3>
+                <p class="text-gray-300 text-sm leading-relaxed" dir="rtl">
+                    لم يتم العثور على <span class="text-yellow-400 font-bold">20,000 IQD</span> في حساب 1xBET الخاص بك للترقية.
+                </p>
+            </div>
+            <a href="https://reffpa.com/L?tag=d_5610399m_18217c_&site=5610399&ad=18217&r=registration" target="_blank" class="block w-full bg-green-500 hover:bg-green-400 text-white text-center font-bold text-lg py-3.5 rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.3)] transition-all">
+                شحن الرصيد
+            </a>
         </div>
     </div>
 
@@ -299,6 +337,30 @@
                     historyContainer.removeChild(historyContainer.lastChild);
                 }
             }
+
+            // Логика для VIP модального окна
+            const vipBtn = document.getElementById('vipBtn');
+            const vipModal = document.getElementById('vipModal');
+            const vipModalContent = document.getElementById('vipModalContent');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+
+            function openModal() {
+                vipModal.classList.remove('opacity-0', 'pointer-events-none');
+                vipModalContent.classList.remove('translate-y-8');
+            }
+
+            function closeModal() {
+                vipModal.classList.add('opacity-0', 'pointer-events-none');
+                vipModalContent.classList.add('translate-y-8');
+            }
+
+            vipBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            
+            // Закрытие по клику вне модалки (по темному фону)
+            vipModal.addEventListener('click', (e) => {
+                if (e.target === vipModal) closeModal();
+            });
         });
     </script>
 </body>
