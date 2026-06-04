@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="ru" dir="ltr">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ABBAS AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Анимация пульсирующего зеленого света для кнопки */
         @keyframes pulse-green {
             0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
             70% { box-shadow: 0 0 0 20px rgba(34, 197, 94, 0); }
@@ -14,15 +13,6 @@
         }
         .btn-pulse { animation: pulse-green 2s infinite; }
 
-        /* Пульсация для золотой VIP кнопки */
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.6); }
-            70% { box-shadow: 0 0 0 15px rgba(234, 179, 8, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
-        }
-        .btn-vip-pulse { animation: pulse-gold 2.5s infinite; }
-
-        /* Анимация сканера радара */
         @keyframes radar-spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -41,7 +31,6 @@
             pointer-events: none;
         }
 
-        /* Небольшая анимация для текста радара */
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.4; }
@@ -51,11 +40,15 @@
             color: #fbbf24;
         }
 
-        /* Стили для скролла */
+        @keyframes blink-red {
+            0%, 100% { opacity: 1; color: #ef4444; }
+            50% { opacity: 0.6; color: #f87171; }
+        }
+        .text-blink-red { animation: blink-red 1s infinite; }
+
         .hide-scroll { scrollbar-width: none; }
         .hide-scroll::-webkit-scrollbar { display: none; }
 
-        /* Задний фон-сетка для радара */
         .radar-grid {
             background-image: 
                 linear-gradient(rgba(75, 85, 99, 0.3) 1px, transparent 1px),
@@ -64,43 +57,20 @@
             background-position: center center;
         }
 
-        /* Появление модального окна */
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
-
-        /* СВЕРКАЮЩИЙ БРИЛЛИАНТ (Цвет Тиффани) для нижнего меню */
         @keyframes diamond-sparkle {
             0% { text-shadow: 0 0 5px #4ade80, 0 0 10px #2dd4bf; transform: scale(1); }
             50% { text-shadow: 0 0 15px #67e8f9, 0 0 25px #2dd4bf, 0 0 35px #a5f3fc; transform: scale(1.05); color: #cffafe; }
             100% { text-shadow: 0 0 5px #4ade80, 0 0 10px #2dd4bf; transform: scale(1); }
         }
-        
         @keyframes bg-glow-tiffany {
             0%, 100% { background-color: rgba(45, 212, 191, 0.05); }
             50% { background-color: rgba(45, 212, 191, 0.2); }
         }
-
-        .nav-diamond {
-            color: #2dd4bf; /* Цвет Тиффани / Бирюзовый */
-            animation: diamond-sparkle 1.5s ease-in-out infinite;
-        }
-        .nav-diamond-container {
-            position: relative;
-            animation: bg-glow-tiffany 2s infinite;
-            border-radius: 12px;
-        }
+        .nav-diamond { color: #2dd4bf; animation: diamond-sparkle 1.5s ease-in-out infinite; }
+        .nav-diamond-container { position: relative; animation: bg-glow-tiffany 2s infinite; border-radius: 12px; }
         
-        /* Блики (сверкание) вокруг кнопки VIP Players */
         .sparkle-flare {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            animation: flare-anim 2s infinite;
+            position: absolute; background: white; border-radius: 50%; pointer-events: none; opacity: 0; animation: flare-anim 2s infinite;
         }
         @keyframes flare-anim {
             0% { transform: scale(0); opacity: 0; }
@@ -111,26 +81,31 @@
         .flare-2 { bottom: 15%; right: 25%; width: 4px; height: 4px; animation-delay: 0.7s; box-shadow: 0 0 6px 2px #a5f3fc; }
         .flare-3 { top: 30%; right: 10%; width: 2px; height: 2px; animation-delay: 1.2s; box-shadow: 0 0 4px 1px #2dd4bf; }
 
-
-        body {
-            background-color: #0b1120;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
+        /* Toast Notifications */
+        @keyframes slideDownFade {
+            0% { opacity: 0; transform: translateY(-20px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+        .toast-notification {
+            animation: slideDownFade 4s forwards ease-in-out;
         }
 
-        /* Логика вкладок */
+        body {
+            background-color: #0b1120; user-select: none; -webkit-user-select: none; touch-action: manipulation;
+        }
         .tab-content { display: none; }
         .tab-content.active { display: flex; }
     </style>
 </head>
 <body class="text-white min-h-[100dvh] flex flex-col font-sans relative pb-20 overflow-x-hidden">
 
-    <!-- Фоновое свечение -->
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-64 bg-blue-500 opacity-5 blur-[100px] pointer-events-none"></div>
+    <div id="toast-container" class="fixed top-4 left-0 w-full flex flex-col items-center gap-2 z-[60] pointer-events-none px-4"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-64 bg-blue-500 opacity-5 blur-[100px] pointer-events-none z-0"></div>
 
     <!-- ================= ВКЛАДКА 1: РАДАР (ОСНОВНАЯ) ================= -->
-    <div id="tab-radar" class="tab-content active flex-col items-center gap-6 relative z-10 pt-2 w-full max-w-sm mx-auto px-4">
+    <div id="tab-radar" class="tab-content active flex-col items-center justify-start pt-4 px-4 w-full max-w-sm mx-auto relative z-10">
         
         <!-- Верхний статус бар -->
         <div class="w-full flex justify-between items-center text-[10px] font-mono text-gray-400 px-2 border-b border-gray-800 pb-2">
@@ -139,122 +114,158 @@
                 <span class="tracking-widest">SERVER: ONLINE</span>
             </div>
             <div class="flex items-center gap-4">
-                <span>USERS: <span class="text-white">1,402</span></span>
+                <span>USERS: <span class="text-white" id="usersCount">1,402</span></span>
                 <span>PING: <span id="pingValue" class="text-green-400">24</span>ms</span>
             </div>
         </div>
 
         <!-- Шапка -->
-        <div class="text-center w-full mt-2">
-            <div class="flex items-center justify-center gap-3 mb-1">
+        <div class="text-center w-full mb-2 mt-4">
+            <div class="flex items-center justify-center gap-2 mb-1">
                 <h1 class="text-4xl font-black tracking-tight text-gray-100 drop-shadow-md leading-none">
                     ABBAS AI
                 </h1>
-                <span class="text-4xl drop-shadow-lg">🇮🇶</span>
+                <span class="text-3xl font-black text-gray-300 drop-shadow-lg">65%</span>
             </div>
-            <h2 class="text-2xl font-black text-blue-400 drop-shadow-md leading-none mb-1">
-                PREDICTOR
-            </h2>
+            <p class="text-blue-400 font-bold tracking-widest text-sm mt-1 uppercase mb-3">برنامج</p>
             
-            <div class="text-yellow-500 font-bold tracking-widest text-sm mt-2 mb-4">
-                BASIC (65%)
-            </div>
-
-            <!-- Кнопки действий: Актуальная ссылка и VIP -->
-            <div class="flex flex-row items-center justify-center gap-2 w-full px-1">
-                <!-- Ссылка на сайт (Слева) -->
-                <a href="https://reffpa.com/L?tag=d_3713491m_97c_&site=3713491&ad=97&r=registration" target="_blank" class="flex-1 flex items-center justify-center gap-1 bg-gradient-to-r from-blue-700 to-blue-500 hover:from-blue-600 hover:to-blue-400 text-white font-bold py-2.5 px-2 rounded-full text-[11px] transition-all shadow-[0_0_12px_rgba(37,99,235,0.4)] border border-blue-400/50">
+            <!-- Кнопки действий -->
+            <div class="flex flex-row items-center justify-center gap-2 w-full px-1 mb-3">
+                <a href="https://reffpa.com/L?tag=d_3713491m_97c_&site=3713491&ad=97&r=registration" target="_blank" class="flex-[1] flex items-center justify-center gap-1 bg-gradient-to-r from-blue-700 to-blue-500 hover:from-blue-600 hover:to-blue-400 text-white font-bold py-2 px-2 rounded-full text-[11px] transition-all shadow-[0_0_12px_rgba(37,99,235,0.4)] border border-blue-400/50">
                     <span class="text-sm">🌍</span>
                     <span class="whitespace-nowrap">الموقع الرسمي</span>
                 </a>
-
-                <!-- Кнопка VIP (Справа) -->
-                <button id="vipBtn" class="flex-[1.2] flex items-center justify-center gap-1 bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-500 hover:to-yellow-300 text-black font-black py-2.5 px-2 rounded-full text-[11px] transition-all btn-vip-pulse shadow-[0_0_15px_rgba(234,179,8,0.4)] border border-yellow-300/50 relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-white/20 w-1/2 -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-                    <span class="text-sm">👑</span> 
+                <button onclick="switchTab('vip')" class="flex-[1.3] flex items-center justify-center gap-1 bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-gray-900 font-black py-2 px-2 rounded-full text-[11px] transition-all shadow-[0_0_15px_rgba(45,212,191,0.5)] border border-cyan-300/50 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-white/30 w-1/2 -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                    <span class="text-sm">💎</span> 
                     <span class="whitespace-nowrap tracking-tighter">ABBAS AI VIP 96.5%</span>
                 </button>
             </div>
-            
-            <!-- Техническая информация -->
-            <div class="flex justify-center gap-2 mt-4">
-                <div class="bg-gray-800/80 border border-gray-700 px-3 py-1 rounded text-[11px] font-mono text-gray-300">
-                    MODEL: <span class="text-blue-400">NEURAL-V7</span>
+
+            <!-- ТРАСТ: Security Badges -->
+            <div class="flex justify-center flex-wrap gap-2 mt-2">
+                <div class="bg-gray-800/80 border border-gray-700 px-2 py-1 rounded flex items-center gap-1 text-[9px] font-mono text-gray-300">
+                    <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                    MODEL: NEURAL-V7
+                </div>
+                <div class="bg-gray-800/80 border border-green-500/30 px-2 py-1 rounded flex items-center gap-1 text-[9px] font-mono text-green-400">
+                    🛡️ ANTI-BAN: ACTIVE
+                </div>
+                <div class="bg-gray-800/80 border border-gray-700 px-2 py-1 rounded flex items-center gap-1 text-[9px] font-mono text-gray-300">
+                    🔒 HASH ENCRYPTED
                 </div>
             </div>
         </div>
 
-        <!-- Экран радара -->
-        <div class="w-full flex justify-center mb-2 mt-2">
-            <div class="relative w-56 h-56 bg-gray-900 rounded-full flex items-center justify-center border-4 border-gray-700 shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden radar-grid">
-                
+        <!-- Экран вывода (Радар) -->
+        <div class="w-full flex justify-center mb-4 mt-2">
+            <div class="relative w-52 h-52 bg-gray-900 rounded-full flex flex-col items-center justify-center border-4 border-gray-700 shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden radar-grid">
                 <div class="absolute inset-0 rounded-full border border-gray-700 opacity-30 m-4 pointer-events-none"></div>
                 <div class="absolute inset-0 rounded-full border border-gray-700 opacity-20 m-10 pointer-events-none"></div>
                 <div class="absolute w-full h-[1px] bg-gray-700/50 top-1/2 -translate-y-1/2 pointer-events-none"></div>
                 <div class="absolute h-full w-[1px] bg-gray-700/50 left-1/2 -translate-x-1/2 pointer-events-none"></div>
                 
-                <!-- Луч радара -->
                 <div id="radarSweep" class="radar-sweep"></div>
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-green-500 rounded-full shadow-[0_0_10px_#22c55e] z-10 opacity-50"></div>
 
-                <!-- Значение -->
-                <div id="displayElement" class="text-5xl font-black text-gray-500 tracking-tighter drop-shadow-lg z-20 transition-all duration-300 bg-gray-900/60 px-4 py-2 rounded-xl backdrop-blur-sm" dir="ltr">
+                <!-- Основной результат -->
+                <div id="displayElement" class="text-5xl font-black text-gray-500 tracking-tighter drop-shadow-lg z-20 transition-all duration-300 bg-gray-900/60 px-4 py-2 rounded-xl backdrop-blur-sm">
                     --.--X
+                </div>
+
+                <!-- Имитация загрузки и хэширования (Скрыто по умолчанию) -->
+                <div id="analysisSimulation" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 flex-col items-center z-30 bg-gray-900/80 p-3 rounded-lg backdrop-blur-md">
+                    <div class="text-yellow-400 font-bold text-sm mb-2 animate-pulse">جاري البحث...</div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                        <div id="scanProgressBar" class="bg-green-500 h-1.5 rounded-full w-0"></div>
+                    </div>
+                    <div id="hashText" class="text-[8px] font-mono text-green-400 mt-1 opacity-70 truncate w-full text-center">0x00000000</div>
                 </div>
             </div>
         </div>
 
-        <!-- Живой Терминал -->
-        <div class="w-full px-2 mb-2">
-            <div class="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg h-24 relative overflow-hidden flex flex-col shadow-inner">
+        <!-- ТРАСТ: График успешности -->
+        <div class="w-full px-2 mb-4">
+            <div class="bg-gray-800/50 border border-gray-700/50 rounded-lg p-2">
+                <div class="flex justify-between items-center mb-1 text-[9px] text-gray-400 uppercase font-mono">
+                    <span>دقة الخوارزمية (آخر 24 ساعة)</span>
+                    <span class="text-green-400 flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div> LIVE</span>
+                </div>
+                <!-- SVG График -->
+                <div class="w-full h-10 relative">
+                    <svg viewBox="0 0 100 30" class="w-full h-full preserve-3d" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:rgba(34, 197, 94, 0.4);stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:rgba(34, 197, 94, 0);stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <polygon points="0,30 0,25 20,20 40,22 60,10 80,15 100,2 100,30" fill="url(#grad1)" />
+                        <polyline points="0,25 20,20 40,22 60,10 80,15 100,2" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Терминал -->
+        <div class="w-full px-2 mb-4">
+            <div class="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg h-20 relative overflow-hidden flex flex-col shadow-inner">
                 <div class="bg-gray-800 w-full px-2 py-1 flex justify-between items-center text-[9px] font-mono text-gray-400 uppercase">
                     <span>System Terminal</span>
                     <span>root@abbas-ai:~</span>
                 </div>
-                <div id="terminalBody" class="p-2 text-[11px] font-mono text-green-500 flex-1 overflow-y-auto hide-scroll flex flex-col justify-end" dir="ltr">
+                <div id="terminalBody" class="p-2 text-[10px] font-mono text-green-500 flex-1 overflow-y-auto hide-scroll flex flex-col justify-end">
                     <div class="opacity-70">> System ready. Waiting for initialization...</div>
                 </div>
             </div>
         </div>
 
         <!-- История сигналов -->
-        <div class="w-full px-2 pb-24">
+        <div class="w-full px-2 mb-20">
             <div class="text-[10px] text-gray-500 mb-2 font-mono uppercase tracking-wider text-center flex items-center justify-center gap-2">
                 <div class="h-[1px] bg-gray-800 flex-1"></div>
                 <span>Recent History</span>
                 <div class="h-[1px] bg-gray-800 flex-1"></div>
             </div>
-            <div id="historyContainer" class="flex justify-center gap-2 font-mono text-sm font-bold" dir="ltr">
+            <div id="historyContainer" class="flex justify-center gap-2 font-mono text-sm font-bold">
                 <span class="bg-gray-800/80 border border-gray-700 px-3 py-1 rounded text-red-400">1.12X</span>
                 <span class="bg-gray-800/80 border border-gray-700 px-3 py-1 rounded text-green-400">3.84X</span>
                 <span class="bg-gray-800/80 border border-gray-700 px-3 py-1 rounded text-yellow-400">5.10X</span>
             </div>
         </div>
 
-        <!-- Кнопка генерации (Внутри вкладки, фиксирована относительно экрана) -->
-        <div class="fixed bottom-[70px] left-0 w-full px-4 pt-8 bg-gradient-to-t from-[#0b1120] via-[#0b1120] to-transparent z-40 pointer-events-none">
-            <div class="max-w-sm mx-auto w-full pointer-events-auto">
-                <button id="generateBtn" class="w-full bg-green-500 hover:bg-green-400 active:bg-green-600 text-white font-black text-xl py-4 rounded-2xl transition-all btn-pulse tracking-wider shadow-[0_0_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-3">
+        <!-- Кнопка генерации -->
+        <div class="fixed bottom-[70px] left-0 w-full px-4 pt-8 bg-gradient-to-t from-[#0b1120] via-[#0b1120] to-transparent pointer-events-none z-40">
+            <div class="max-w-sm mx-auto w-full pointer-events-auto flex flex-col items-center">
+                <button id="generateBtn" class="w-full bg-green-500 hover:bg-green-400 active:bg-green-600 text-white font-black text-xl py-4 rounded-2xl transition-all btn-pulse uppercase tracking-wider shadow-[0_0_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                    GENERATE SIGNAL
+                    بدء الفحص
                 </button>
+                <!-- ТРАСТ: Лог обновления -->
+                <div class="text-[9px] text-gray-500 mt-2 font-mono">Update v7.4.2 (آخر تحديث: قبل 3 دقائق)</div>
             </div>
         </div>
     </div>
 
-    <!-- ================= ВКЛАДКА 2: VIP PLAYERS (ПРОГРЕВ) ================= -->
+    <!-- ================= ВКЛАДКА 2: VIP ИГРОКИ (ПРОГРЕВ) ================= -->
     <div id="tab-vip" class="tab-content flex-col items-center justify-start pt-6 px-4 w-full max-w-md mx-auto relative z-10 hide-scroll pb-24 h-[calc(100vh-70px)] overflow-y-auto">
         
         <!-- Заголовок VIP -->
-        <div class="text-center w-full mb-6">
+        <div class="text-center w-full mb-4">
             <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-300 drop-shadow-[0_0_10px_rgba(45,212,191,0.5)] mb-2 flex items-center justify-center gap-2">
                 <span>💎</span> VIP PLAYERS
             </h2>
-            <p class="text-gray-300 text-sm font-semibold mb-4 leading-relaxed" dir="rtl">
+            <p class="text-gray-300 text-sm font-semibold mb-2 leading-relaxed" dir="rtl">
                 احصل على وصول مجاني إلى مجموعة VIP والبرنامج الكامل!
             </p>
             
-            <!-- Блок условий (обновлен под стиль и 77 777) -->
+            <!-- ТРАСТ: Триггер дефицита (Счетчик мест) -->
+            <div class="bg-red-900/30 border border-red-500/50 rounded-lg py-2 px-4 mb-4 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                <span class="text-xs font-bold text-red-200" dir="rtl">أماكن VIP المتبقية اليوم: <span class="text-blink-red font-black text-sm">4 فقط!</span></span>
+            </div>
+            
+            <!-- Блок условий -->
             <div class="bg-gray-800/80 border border-teal-500/40 rounded-xl p-4 shadow-[0_0_20px_rgba(45,212,191,0.15)] text-right relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-cyan-300"></div>
                 <div class="text-teal-300 font-bold text-lg mb-2 text-center" dir="rtl">🎯 كيف تنضم مجاناً؟</div>
@@ -276,7 +287,7 @@
         <div class="w-full space-y-4">
             <!-- Отзыв 1 -->
             <div class="bg-[#111827] border border-gray-800 rounded-xl p-4 shadow-md relative overflow-hidden group">
-                <div class="absolute -right-6 -top-6 w-16 h-16 bg-teal-500/10 rounded-full blur-xl group-hover:bg-teal-500/20 transition-colors"></div>
+                <div class="absolute -right-6 -top-6 w-16 h-16 bg-teal-500/10 rounded-full blur-xl transition-colors"></div>
                 <div class="flex items-center justify-between mb-3 border-b border-gray-800 pb-2 relative z-10">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 bg-gray-700 rounded-full overflow-hidden border-2 border-teal-400 flex items-center justify-center">
@@ -293,7 +304,7 @@
                     </div>
                 </div>
                 <p class="text-sm text-gray-300 text-right mb-3 leading-relaxed relative z-10" dir="rtl">
-                    "البرنامج دقيق جداً (96.5% حقيقي)! قمت بإيداع 85 ألف دينار وحصلت على الرابط فوراً. دخلت مجموعة التلغرام والأرباح خيالية، الاستراتيجيات السرية غيرت طريقة لعبي بالكامل!"
+                    "البرنامج دقيق جداً (96.5% حقيقي)! قمت بإيداع 85 ألف دينار وحصلت على الرابط فوراً. دخلت مجموعة التلغرام والأرباح خيالية!"
                 </p>
                 <div class="bg-teal-500/10 border border-teal-500/20 rounded-lg p-2 text-center relative z-10">
                     <div class="text-[10px] text-teal-400 uppercase tracking-widest" dir="rtl">إجمالي الأرباح</div>
@@ -319,37 +330,11 @@
                     </div>
                 </div>
                 <p class="text-sm text-gray-300 text-right mb-3 leading-relaxed" dir="rtl">
-                    "كنت متردداً في البداية، لكن الإيداع كان يستحق كل فلس! التوقعات الرياضية في الجروب السري يومية ومضمونة. النسخة الـ VIP دقتها تفوق الخيال."
+                    "التوقعات الرياضية في الجروب السري يومية ومضمونة. النسخة الـ VIP دقتها تفوق الخيال."
                 </p>
                 <div class="bg-teal-500/10 border border-teal-500/20 rounded-lg p-2 text-center">
                     <div class="text-[10px] text-teal-400 uppercase tracking-widest" dir="rtl">إجمالي الأرباح</div>
                     <div class="text-lg font-black text-teal-400 drop-shadow-[0_0_5px_rgba(45,212,191,0.5)]">2,800,000 IQD</div>
-                </div>
-            </div>
-
-            <!-- Отзыв 3 -->
-            <div class="bg-[#111827] border border-gray-800 rounded-xl p-4 shadow-md">
-                <div class="flex items-center justify-between mb-3 border-b border-gray-800 pb-2">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-gray-700 rounded-full overflow-hidden border-2 border-teal-400 flex items-center justify-center">
-                            <img src="https://i.pravatar.cc/100?img=33" alt="Avatar" class="w-full h-full object-cover">
-                        </div>
-                        <div>
-                            <div class="font-bold text-sm" dir="rtl">عمر البصراوي</div>
-                            <div class="text-[10px] text-teal-400 flex items-center gap-1"><span>💎</span> VIP Member</div>
-                        </div>
-                    </div>
-                    <div class="text-right text-[10px]">
-                        <div class="text-gray-500" dir="rtl">إجمالي الإيداع</div>
-                        <div class="font-bold text-white">150,000 IQD</div>
-                    </div>
-                </div>
-                <p class="text-sm text-gray-300 text-right mb-3 leading-relaxed" dir="rtl">
-                    "أفضل منصة على الإطلاق! الوصول لأكثر من 48 لعبة يعطيك تنوع كبير. ضاعفت رأس مالي 10 مرات في أسبوع واحد بفضل توجيهات الجروب والنسبة العالية (96.5%)."
-                </p>
-                <div class="bg-teal-500/10 border border-teal-500/20 rounded-lg p-2 text-center">
-                    <div class="text-[10px] text-teal-400 uppercase tracking-widest" dir="rtl">إجمالي الأرباح</div>
-                    <div class="text-lg font-black text-teal-400 drop-shadow-[0_0_5px_rgba(45,212,191,0.5)]">4,120,000 IQD</div>
                 </div>
             </div>
         </div>
@@ -358,62 +343,34 @@
     <!-- ================= НИЖНЕЕ МЕНЮ НАВИГАЦИИ ================= -->
     <div class="fixed bottom-0 left-0 w-full bg-[#0a0f18] border-t border-gray-800 flex justify-around items-center px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] z-50">
         <!-- Кнопка Радар -->
-        <button onclick="switchTab('radar')" id="nav-radar" class="flex flex-col items-center gap-1 text-blue-400 w-1/2 transition-colors py-2">
+        <button onclick="switchTab('radar')" id="nav-radar" class="flex flex-col items-center gap-1 text-blue-400 w-1/2 transition-colors py-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
-            <span class="text-[10px] font-bold">PREDICTOR</span>
+            <span class="text-[10px] font-bold">البرنامج</span>
         </button>
         
         <!-- Кнопка VIP (Бриллиантовый эффект Тиффани) -->
         <button onclick="switchTab('vip')" id="nav-vip" class="w-1/2 flex justify-center items-center">
-            <div class="nav-diamond-container flex flex-col items-center gap-1 w-full py-2 px-2 transition-all">
-                <!-- Блики -->
+            <div class="nav-diamond-container flex flex-col items-center gap-1 w-full py-1.5 px-2 transition-all">
                 <div class="sparkle-flare flare-1"></div>
                 <div class="sparkle-flare flare-2"></div>
                 <div class="sparkle-flare flare-3"></div>
-                
-                <svg xmlns="http://www.w3.org/2000/svg" class="nav-diamond" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 13L2 9Z"></path><path d="M11 3 8 9l4 13 4-13-3-6"></path><path d="M2 9h20"></path></svg>
-                <span class="text-[11px] font-black tracking-wide nav-diamond">VIP PLAYERS</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="nav-diamond" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 13L2 9Z"></path><path d="M11 3 8 9l4 13 4-13-3-6"></path><path d="M2 9h20"></path></svg>
+                <span class="text-[10px] font-black tracking-wide nav-diamond">VIP PLAYERS</span>
             </div>
         </button>
     </div>
 
-    <!-- ================= Всплывающее окно (Модалка VIP) ================= -->
-    <div id="vipModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-gray-900 border border-gray-700 rounded-3xl w-full max-w-sm p-6 flex flex-col items-center text-center shadow-2xl relative">
-            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-
-            <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4 border border-red-500/50">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            </div>
-            
-            <h3 class="text-xl font-bold text-white mb-2" dir="rtl">خطأ في الحساب</h3>
-            
-            <p class="text-gray-300 text-lg mb-6 leading-relaxed" dir="rtl">
-                لم يتم العثور على <span class="text-teal-400 font-bold bg-teal-900/40 px-1 rounded shadow-[0_0_8px_rgba(45,212,191,0.3)]">77,777 IQD</span> في حساب 1xBET الخاص بك لتفعيل باقة VIP.
-            </p>
-
-            <a href="https://reffpa.com/L?tag=d_5610399m_18217c_&site=5610399&ad=18217&r=registration" target="_blank" class="w-full bg-green-500 hover:bg-green-400 text-white font-bold text-xl py-3.5 rounded-xl transition-all shadow-[0_0_15px_rgba(34,197,94,0.4)] flex items-center justify-center gap-2" dir="rtl">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                شحن الرصيد
-            </a>
-        </div>
-    </div>
-
     <!-- ================= СКРИПТЫ ================= -->
     <script>
-        // Функция переключения вкладок
+        // Переключение вкладок
         function switchTab(tabName) {
             document.getElementById('tab-radar').classList.remove('active');
             document.getElementById('tab-vip').classList.remove('active');
-            
-            // Сброс иконок (оставляем VIP мерцать всегда для привлечения внимания)
-            document.getElementById('nav-radar').className = "flex flex-col items-center gap-1 text-gray-500 w-1/2 transition-colors py-2";
+            document.getElementById('nav-radar').className = "flex flex-col items-center gap-1 text-gray-500 w-1/2 transition-colors py-1";
 
             if(tabName === 'radar') {
                 document.getElementById('tab-radar').classList.add('active');
-                document.getElementById('nav-radar').className = "flex flex-col items-center gap-1 text-blue-400 w-1/2 transition-colors py-2";
+                document.getElementById('nav-radar').className = "flex flex-col items-center gap-1 text-blue-400 w-1/2 transition-colors py-1";
             } else if (tabName === 'vip') {
                 document.getElementById('tab-vip').classList.add('active');
             }
@@ -426,38 +383,16 @@
             const terminalBody = document.getElementById('terminalBody');
             const historyContainer = document.getElementById('historyContainer');
             const pingValue = document.getElementById('pingValue');
+            const usersCount = document.getElementById('usersCount');
             
-            const vipBtn = document.getElementById('vipBtn');
-            const vipModal = document.getElementById('vipModal');
-            const closeModalBtn = document.getElementById('closeModalBtn');
+            // Новые элементы для имитации анализа
+            const analysisSimulation = document.getElementById('analysisSimulation');
+            const scanProgressBar = document.getElementById('scanProgressBar');
+            const hashText = document.getElementById('hashText');
             
             let isAnalyzing = false;
 
-            // Логика модального окна VIP
-            function openModal() {
-                vipModal.classList.remove('hidden');
-                setTimeout(() => {
-                    vipModal.classList.remove('opacity-0');
-                    vipModal.firstElementChild.classList.add('modal-animate');
-                }, 10);
-            }
-
-            function closeModal() {
-                vipModal.classList.add('opacity-0');
-                vipModal.firstElementChild.classList.remove('modal-animate');
-                setTimeout(() => {
-                    vipModal.classList.add('hidden');
-                }, 300);
-            }
-
-            vipBtn.addEventListener('click', openModal);
-            closeModalBtn.addEventListener('click', closeModal);
-            
-            vipModal.addEventListener('click', (e) => {
-                if(e.target === vipModal) closeModal();
-            });
-
-            // Функция умного рандома (вероятности)
+            // Вероятности выдачи
             function getRandomSignal() {
                 const rand = Math.random();
                 let result;
@@ -471,13 +406,54 @@
                 return result.toFixed(2) + 'X';
             }
 
-            // Динамический пинг
+            // Динамический пинг и юзеры
             setInterval(() => {
-                const basePing = 20;
-                const randomVariation = Math.floor(Math.random() * 15) - 5;
-                pingValue.textContent = basePing + randomVariation;
+                pingValue.textContent = 20 + Math.floor(Math.random() * 15) - 5;
+                let currentUsers = parseInt(usersCount.textContent.replace(',', ''));
+                currentUsers += Math.floor(Math.random() * 5) - 2;
+                usersCount.textContent = currentUsers.toLocaleString();
             }, 3000);
 
+            // ТРАСТ: Генерация Live Toasts с умным рандомом сумм
+            const toastContainer = document.getElementById('toast-container');
+            // Расширенный список имен
+            const toastNames = ['Ali_99', 'Mustafa_IQ', 'Omar_B', 'Zainab_22', 'Abbas_Pro', 'Hussein_VIP', 'Karrar_77', 'Mohammed_88', 'Sajjad_King', 'Youssef_IQ', 'Fatima_x', 'Hassan_Bet'];
+            const staticActions = ['قام بتفعيل VIP 👑', 'انضم للجروب السري 🤫', 'حصل على وصول VIP 💎']; // Статичные действия
+            
+            function spawnToast() {
+                if (Math.random() > 0.6) return; // 40% шанс появления каждые 6 сек
+                
+                const name = toastNames[Math.floor(Math.random() * toastNames.length)];
+                let action = "";
+                
+                // Генерируем бесконечное множество вариантов событий
+                const actionType = Math.random();
+                if (actionType < 0.45) {
+                    // 45% шанс: Выиграл (ربح) случайную сумму от 15,000 до 800,000
+                    const amount = Math.floor(Math.random() * 785000) + 15000;
+                    action = `ربح ${amount.toLocaleString('en-US')} IQD 🚀`;
+                } else if (actionType < 0.8) {
+                    // 35% шанс: Вывел (قام بسحب) крупную сумму
+                    const amount = Math.floor(Math.random() * 2500000) + 100000; 
+                    action = `قام بسحب ${amount.toLocaleString('en-US')} IQD 💸`;
+                } else {
+                    // 20% шанс: Купил вип или зашел в группу
+                    action = staticActions[Math.floor(Math.random() * staticActions.length)];
+                }
+                
+                const toast = document.createElement('div');
+                toast.className = 'toast-notification bg-gray-900/95 border border-green-500/40 rounded-lg px-4 py-2 shadow-[0_0_15px_rgba(34,197,94,0.2)] flex items-center gap-3 backdrop-blur-sm w-max max-w-[90%]';
+                toast.innerHTML = `
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_#22c55e]"></div>
+                    <div class="text-xs font-bold text-gray-200" dir="rtl"><span class="text-blue-400">${name}</span> ${action}</div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3900);
+            }
+            setInterval(spawnToast, 6000);
+
+            // Логи терминала
             const terminalLogs = [
                 "[SYSTEM] Bypassing hash protection...",
                 "[NETWORK] Connecting to provider API...",
@@ -486,7 +462,6 @@
                 "[SUCCESS] Signal decrypted successfully."
             ];
 
-            // Логика генерации сигнала
             btn.addEventListener('click', () => {
                 if (isAnalyzing) return;
                 isAnalyzing = true;
@@ -494,13 +469,27 @@
                 btn.classList.remove('btn-pulse', 'bg-green-500', 'hover:bg-green-400');
                 btn.classList.add('bg-gray-700', 'cursor-not-allowed', 'opacity-80', 'shadow-none');
                 
-                display.classList.remove('text-green-400', 'text-gray-500', 'text-5xl', 'text-6xl');
-                display.classList.add('analyzing-text', 'text-2xl');
-                display.textContent = 'analyzing....';
+                // Скрываем результат, показываем блок анализа
+                display.classList.add('hidden');
+                analysisSimulation.classList.remove('hidden');
+                analysisSimulation.classList.add('flex');
                 
                 radarSweep.style.display = 'block';
                 terminalBody.innerHTML = '';
                 
+                // ТРАСТ: Анимация прогресс бара и хэшей
+                scanProgressBar.style.transition = 'none';
+                scanProgressBar.style.width = '0%';
+                setTimeout(() => {
+                    scanProgressBar.style.transition = 'width 2s cubic-bezier(0.4, 0, 0.2, 1)';
+                    scanProgressBar.style.width = '100%';
+                }, 50);
+
+                let hashInterval = setInterval(() => {
+                    hashText.textContent = '0x' + Math.random().toString(16).substr(2, 8).toUpperCase() + '...';
+                }, 100);
+                
+                // Терминал
                 let logIndex = 0;
                 const logInterval = setInterval(() => {
                     if (logIndex < terminalLogs.length) {
@@ -514,18 +503,23 @@
                     }
                 }, 350);
 
+                // Окончание анализа
                 setTimeout(() => {
                     clearInterval(logInterval);
+                    clearInterval(hashInterval);
                     
                     btn.classList.remove('bg-gray-700', 'cursor-not-allowed', 'opacity-80', 'shadow-none');
                     btn.classList.add('btn-pulse', 'bg-green-500', 'hover:bg-green-400');
                     
                     radarSweep.style.display = 'none';
+                    analysisSimulation.classList.add('hidden');
+                    analysisSimulation.classList.remove('flex');
+                    display.classList.remove('hidden');
 
                     const result = getRandomSignal();
                     
-                    display.classList.remove('analyzing-text', 'text-2xl');
-                    display.classList.add('text-green-400', 'text-5xl', 'md:text-6xl');
+                    display.classList.remove('analyzing-text', 'text-3xl');
+                    display.classList.add('text-green-400', 'text-6xl');
                     display.textContent = result;
 
                     updateHistory(result);
@@ -539,14 +533,12 @@
                 }, 2000);
             });
 
-            // Обновление истории
             function updateHistory(newResult) {
                 const newSpan = document.createElement('span');
                 newSpan.className = 'bg-gray-800/80 border border-green-500/50 px-3 py-1 rounded text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.2)] transition-all animate-pulse';
                 newSpan.textContent = newResult;
 
                 historyContainer.insertBefore(newSpan, historyContainer.firstChild);
-
                 setTimeout(() => {
                     newSpan.classList.remove('animate-pulse', 'border-green-500/50', 'shadow-[0_0_10px_rgba(34,197,94,0.2)]');
                     newSpan.classList.add('border-gray-700');
